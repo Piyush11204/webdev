@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block body -%}
+<link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}"/>
+
+    
+    <h1>Recently Added Vendors</h1>
+    <div id="vendors"></div>
+    <script>
+      fetch('/rely')
+        .then(response => response.json())
+        .then(data => {
+          const vendors = data.vender;
+          const vendorsList = document.getElementById('vendors');
+          vendors.forEach(vendor => {
+            const vendorItem = document.createElement('li');
+            vendorItem.textContent = `${vendor.content} - ${vendor.degree} - ${vendor.uname} - ${vendor.number}`;
+            vendorsList.appendChild(vendorItem);
+          });
+        })
+        .catch(error => console.error('Error:', error));
+    </script>
+    
+  
+{% endblock  %}

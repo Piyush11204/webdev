@@ -1,43 +1,25 @@
-#from flask import Flask,render_template,request,redirect
-
-#from flask_pymongo import PyMongo
-
-#app = Flask(__name__)
-#app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
-#mongo = PyMongo(app)
 
 
-from flask import Flask, render_template, request, url_for, redirect 
-# Mongoclient is used to create a mongodb client, so we can connect on the localhost 
-# with the default port
+from flask import Flask, flash,  render_template, request, url_for, redirect ,jsonify
 from pymongo import MongoClient
-# ObjectId function is used to convert the id string to an objectid that MongoDB can understand
 from bson.objectid import ObjectId
-# Instantiate the Flask class by creating a flask application
 app = Flask(__name__)
-# Create the mongodb client
+app.secret_key = 'your_secret_key_here'
 client = MongoClient('localhost', 27017)
-# Get and Post Route
 @app.route("/add", methods=('GET', 'POST'))
 def add():
-    if request.method == "POST":   # if the request method is post, then insert the todo document in vender collection
+    if request.method == "POST":   
         content = request.form['content']
         degree = request.form['degree']
         uname =request.form['uname']
         number=request.form['number']
         vender.insert_one({'content': content, 'degree': degree, 'uname': uname,'number':number})
-        return redirect(url_for('add')) # redirect the user to home page
+        return redirect(url_for('recently')) # redirect the user to home page
     all_vender = vender.find()    # display all todo documents
     return render_template('add.html', vender = all_vender) # render home page template with all vender
 
-
-
-
 def add():
       return render_template( 'add.html' )
-
-
-
 
 @app.route('/')
 def index():
@@ -46,16 +28,35 @@ def index():
 def contact():
     return render_template( 'contact.html' )
 
-
+#for contact input
+@app.route("/contact", methods=('GET', 'POST'))
+def sendmail():
+    if request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
+        contact = request.form["contact"]
+        message = request.form["message"]
+        
+        flash("Your message is sent successfully")
+        contact_collection = db.contact_collection
+        contact_collection.insert_one({'name':name,'email':email,'contact':contact,'message':message})
+    
+        return render_template("contact.html")  
+    
   
 @app.route('/add',methods=['POST'])
+@app.route('/contact',methods=['POST'])
 
  
 @app.route('/home')
 def landingPage():
     return render_template('index.html')
 
-
+@app.route('/recently')
+def recently():
+     all_vender = vender.find() 
+     return render_template('recently.html', vender = all_vender)
+    
 @app.route('/about')
 def about():
     return  render_template('about.html')
