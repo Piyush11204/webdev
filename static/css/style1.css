@@ -2,11 +2,12 @@
     /* background-color: #ffff11; */
     padding: 50px 0;
 }
-body{
-    background-image: url("contactPhoto.jpg");
-   image-rendering: crisp-edges; 
+body {
+    background-image: url("../images/contactPhoto.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
-
 .container {
     max-width: 800px;
     margin: 0 auto;
